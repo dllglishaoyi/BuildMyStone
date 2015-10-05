@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>卡牌浏览</title>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta charset="utf-8" />
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <style type='text/css'>
+        body,ul{
+            padding: 0;
+            margin: 0;
+        }
+        li{
+            list-style:none;
+            display: block;
+        }
+        .title{
+            background: #453466;
+            font-size: 20px;
+        }
+        .card-item{
+            height: 150px;
+        }
+        .card-cover{
+            height: 150px;
+        }
+
+    </style>
+  </head>
+  <body>
+    <h1>卡牌浏览</h1>
+    <p>卡牌浏览</p>
+    <ul>
+        <% for(var key in cards){%>
+            
+            <li class="title">
+                <span><%= key%></span>
+            </li>
+            <% cards[key].forEach(function(card,index){%>
+            <li class="card-item">
+                <img class="card-cover" src="<%= card.img%>">
+                <span><%= card.name%></span>
+            </li>
+            
+            <% });%>
+        <% }%>
+    </ul>
+  </body>
+</html>
