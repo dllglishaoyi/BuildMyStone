@@ -172,5 +172,5 @@ function getcards(req,res){
   //      locale: 'enUS',
   //      mechanics: [Object] } ] }});    
 
-    
+
 }

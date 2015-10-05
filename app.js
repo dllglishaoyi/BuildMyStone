@@ -11,6 +11,18 @@ var crawler = require('./routes/crawler');
 
 var app = express();
 
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://hearthstone:hearthstonepass@localhost/hearthstone');
+
+mongoose.plugin(function(schema, options){ // 监听 save 和 update 事件
+    schema.post('save', function(doc){
+        app.emit('model.post.save', doc);
+    });
+    schema.post('remove', function(doc){
+        app.emit('model.post.delete', doc);
+    });
+});
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
