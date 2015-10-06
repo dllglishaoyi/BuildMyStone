@@ -7,7 +7,7 @@ var fs = require('fs');
 
 var imageFolder = 'public/images/card/';
 var utils = require('../lib/utils');
-
+var HearthStone = require('../models/hearthstone');
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
@@ -28,34 +28,50 @@ function allcards(req,res){
     });
 }
 
-function saveCardsImg(cards){
+function saveCards(cards){
     for(var key in cards){
-        async.eachLimit(cards[key],2,function(card,callback){
-            utils.mkdirs(imageFolder+card.name+'/');
-            utils.mkdirs(imageFolder+card.name+'/gold/');
-            if (card.img) {
-                var imgName = card.img.split('/').slice(-1).pop();
-                var normalpath = imageFolder+card.name+'/'+imgName;
-                fs.exists(normalpath, function (exists) {
-                    // if (!exists) {
-                        utils.download(card.img, normalpath, function(err){
-                            console.log(err);
-                        });
-                    // };
-                });
-            };
-            if (card.imgGold) {
-                var imgName = card.imgGold.split('/').slice(-1).pop();
-                var goldpath = imageFolder+card.name+'/gold/'+imgName;
-                fs.exists(goldpath, function (exists) {
-                    // if (!exists) {
-                        utils.download(card.imgGold, goldpath, function(err){
-                            console.log(err);
-                        });
-                    // };
-                });
-            };
-            callback();
+        async.eachSeries(cards[key],function(card,callback){
+            HearthStone.Card.findOneAndUpdate({name:card.name},{$set:card},{upsert:true,"new":true},function(err,c){
+                // console.log(err," c:",c);
+                if (err || !c) {
+                    callback();
+                    return;
+                };
+                utils.mkdirs(imageFolder+card.name+'/');
+                utils.mkdirs(imageFolder+card.name+'/gold/');
+                if (card.img) {
+                    var imgName = card.img.split('/').slice(-1).pop();
+                    var normalpath = imageFolder+card.name+'/'+imgName;
+                    fs.exists(normalpath, function (exists) {
+                        if (!exists) {
+                            utils.download(card.img, normalpath, function(err){
+                                console.log(err);
+                                if (!err) {
+                                    c.img = normalpath;
+                                    c.save();
+                                };
+                            });
+                        };
+                    });
+                };
+                if (card.imgGold) {
+                    var imgName = card.imgGold.split('/').slice(-1).pop();
+                    var goldpath = imageFolder+card.name+'/gold/'+imgName;
+                    fs.exists(goldpath, function (exists) {
+                        if (!exists) {
+                            utils.download(card.imgGold, goldpath, function(err){
+                                console.log(err);
+                                if (!err) {
+                                    c.imgGold = goldpath;
+                                    c.save();
+                                };
+                            });
+                        };
+                    });
+                };
+                callback();
+            });
+            
 
         },function(err){
             
@@ -71,7 +87,7 @@ function getcards(req,res){
     hearthapi.getCards(params,function(err,result){
         console.log(result);
         if (!err) {
-            saveCardsImg(result);
+            saveCards(result);
             res.render('card/cardlist',{cards:result});    
         }else{
             res.send(err);    
