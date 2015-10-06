@@ -27,3 +27,11 @@ var CardSchema = mongoose.Schema({
     }]
 });
 exports.Card = mongoose.model('Card', CardSchema);
+
+var UserSchema = mongoose.Schema({
+    userName:String,
+    cards:[{
+        cardName:String
+    }]
+});
+exports.User = mongoose.model('User', UserSchema);

@@ -4,6 +4,7 @@ var unirest = require('unirest');
 var hearthapi = require('../lib/hearthapi');
 var async = require('async');
 var fs = require('fs');
+var _ = require('underscore');
 
 var imageFolder = 'public/images/card/';
 var utils = require('../lib/utils');
@@ -16,7 +17,66 @@ router.get('/', function(req, res, next) {
 router.get('/allcards',allcards);
 router.get('/getcards',getcards);
 
+router.get('/matchdeck',matchdeck);
+
 module.exports = router;
+
+function matchdeck(req,res){
+    var recommendDecks = [];
+    var ids = [];//for debug
+    HearthStone.User.findOne(/*{user:XXX},*/function(err,user){
+      if(user){
+        HearthStone.Deck.find(function(err,decks){
+          async.eachSeries(decks,function(deck,callback){
+            var cards = unionCards(user.cards,deck.cards,deck._id);
+            if (recommendDecks.length < 3) {
+              recommendDecks.push(cards);
+              ids.push(deck._id);//for debug
+            }else{
+              for (var i = 0; i < recommendDecks.length; i++) {
+                if(cards.sameCards.length > recommendDecks[i].sameCards.length){
+                  recommendDecks[i] = cards;
+                  ids[i] = deck._id;//for debug
+                }
+              };
+            }
+            callback();
+          },function(err){
+            console.log(ids);//for debug
+            res.send(recommendDecks);
+          });
+        });
+      }else{
+        res.send("empty");
+      }
+      
+    });
+}
+
+function unionCards(cards,deck,deckid){
+  var sameArray = [];
+  var originalDeck = new Array(deck);
+  cards = _.map(cards,function(item){
+    return item.cardName;
+  });
+  deck = _.map(deck,function(item){
+    return item.cardName;
+  });
+  for (var i = 0; i < cards.length; i++) {
+    var card = cards[i];
+    var a = deck.indexOf(card); 
+    if (a >= 0) {
+      deck.splice(a, 1); 
+      sameArray.push(card);
+    }
+  };
+  return {
+    percet:(sameArray.length*100/30).toFixed(0) + "%",
+    deckid:deckid,
+    sameCards:sameArray,
+    originalDeck:originalDeck
+  };
+}
 
 function allcards(req,res){
     hearthapi.getCards({},function(err,result){
