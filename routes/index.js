@@ -2,6 +2,11 @@ var express = require('express');
 var router = express.Router();
 var unirest = require('unirest');
 var hearthapi = require('../lib/hearthapi');
+var async = require('async');
+var fs = require('fs');
+
+var imageFolder = 'public/images/card/';
+var utils = require('../lib/utils');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -23,11 +28,50 @@ function allcards(req,res){
     });
 }
 
+function saveCardsImg(cards){
+    for(var key in cards){
+        async.eachLimit(cards[key],2,function(card,callback){
+            utils.mkdirs(imageFolder+card.name+'/');
+            utils.mkdirs(imageFolder+card.name+'/gold/');
+            if (card.img) {
+                var imgName = card.img.split('/').slice(-1).pop();
+                var normalpath = imageFolder+card.name+'/'+imgName;
+                fs.exists(normalpath, function (exists) {
+                    // if (!exists) {
+                        utils.download(card.img, normalpath, function(err){
+                            console.log(err);
+                        });
+                    // };
+                });
+            };
+            if (card.imgGold) {
+                var imgName = card.imgGold.split('/').slice(-1).pop();
+                var goldpath = imageFolder+card.name+'/gold/'+imgName;
+                fs.exists(goldpath, function (exists) {
+                    // if (!exists) {
+                        utils.download(card.imgGold, goldpath, function(err){
+                            console.log(err);
+                        });
+                    // };
+                });
+            };
+            callback();
+
+        },function(err){
+            
+        });
+        // cards[key].forEach(function(card,index){
+            
+        // });
+    };
+}
+
 function getcards(req,res){
     var params = req.query;
     hearthapi.getCards(params,function(err,result){
         console.log(result);
         if (!err) {
+            saveCardsImg(result);
             res.render('card/cardlist',{cards:result});    
         }else{
             res.send(err);    

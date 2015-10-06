@@ -36,6 +36,10 @@ function getAllDecks(hero,callback){
     superagent.get(sourceUrl)
     .end(function (err, result) {
         var pageUrls = [];//存储每页的url
+        if (!result) {
+            callback();
+            return;
+        }
         var $ = cheerio.load(result.text);
         var totalpage = $('.pagination .pages').text().split(' ').slice(-1).pop();
         for (var i = 0; i < totalpage; i++) {
