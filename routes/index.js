@@ -15,6 +15,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/allcards',allcards);
+router.get('/all163cards',all163cards);
 router.get('/getcards',getcards);
 
 router.get('/matchdeck',matchdeck);
@@ -88,6 +89,12 @@ function allcards(req,res){
     });
 }
 
+function all163cards(req,res){
+    HearthStone.Card.find(function(err,cards){
+      res.send(cards);
+    });
+}
+
 function saveCards(cards){
     for(var key in cards){
         async.eachSeries(cards[key],function(card,callback){
@@ -100,6 +107,7 @@ function saveCards(cards){
                 utils.mkdirs(imageFolder+card.name+'/');
                 utils.mkdirs(imageFolder+card.name+'/gold/');
                 if (card.img) {
+                    c.img = card.img;
                     var imgName = card.img.split('/').slice(-1).pop();
                     var normalpath = imageFolder+card.name+'/'+imgName;
                     fs.exists(normalpath, function (exists) {
@@ -108,13 +116,14 @@ function saveCards(cards){
                                 console.log(err);
                                 if (!err) {
                                     c.img = normalpath;
-                                    c.save();
                                 };
+                                c.save();
                             });
                         };
                     });
                 };
                 if (card.imgGold) {
+                    c.imgGold = card.imgGold;
                     var imgName = card.imgGold.split('/').slice(-1).pop();
                     var goldpath = imageFolder+card.name+'/gold/'+imgName;
                     fs.exists(goldpath, function (exists) {
@@ -123,8 +132,8 @@ function saveCards(cards){
                                 console.log(err);
                                 if (!err) {
                                     c.imgGold = goldpath;
-                                    c.save();
                                 };
+                                c.save();
                             });
                         };
                     });

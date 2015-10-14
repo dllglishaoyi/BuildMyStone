@@ -31,6 +31,37 @@ router.get('/', function(req, res, next) {
   
 });
 
+router.get('/getcards163',getcards163);
+
+function getcards163 (req,res) {
+    //http://db.h.163.com/cards/filter?filter=Rarity%3D1%3A2%3A3%3A4%3A5&page=80
+    var sourceUrl = 'http://db.h.163.com/cards/filter?filter=Rarity%3D1%3A2%3A3%3A4%3A5&page=';
+    var pageUrls = [];
+    var pagecount = 1;
+    for (var i = 1; i < pagecount + 80; i++) {
+        pageUrls.push(sourceUrl+i);
+    };
+    async.eachSeries(pageUrls,function(pageUrl,cb){
+        console.log("start getting page:",pageUrl);
+        superagent.get(pageUrl)
+        .end(function (err, result) {
+            // res.send(result);
+            var $ = cheerio.load(result.text);
+            $('.card-box .card').each(function (idx, element) {
+                var card = new HearthStone.Card();
+                card.name_cn = $(this).children('.card-attribute').children('h2').children('a').text().replace(/[\r\n]/g, "").trim();
+                card.img = $(this).children('.card-image').children('a').children('img').attr('src');
+                card.source = '163';
+                // console.log(card);
+                card.save();
+            });
+            cb();
+        });
+    },function(err){
+        res.send("ok");
+    });
+}
+
 function getAllDecks(hero,callback){
     var sourceUrl = targetUrl + hero + '/';
     superagent.get(sourceUrl)

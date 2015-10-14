@@ -11,6 +11,7 @@ exports.Deck = mongoose.model('Deck', DeckSchema);
 var CardSchema = mongoose.Schema({
     cardId:String,
     name:String,
+    name_cn:String,
     cost: Number,
     cardSet:String,
     type:String,
@@ -24,7 +25,8 @@ var CardSchema = mongoose.Schema({
     locale:String,
     mechanics:[{
         name:String
-    }]
+    }],
+    source:String
 });
 exports.Card = mongoose.model('Card', CardSchema);
 
