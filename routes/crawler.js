@@ -33,6 +33,63 @@ router.get('/', function(req, res, next) {
 
 router.get('/getcards163',getcards163);
 
+router.get('/getdecks163',getdecks163);
+
+function getdecks163 (req,res) {
+    var startUrl = "http://tools.h.163.com/list/99/0/0/create_time";
+    var hostUrl = "http://tools.h.163.com/"
+    function scanpage (pageurl) {
+        superagent.get(pageurl)
+        .end(function (err, result) {
+            // res.send(result);
+            if (result) {
+                var $ = cheerio.load(result.text);
+                $(".hs-list-dl").each(function(index,item){
+                    // console.log($(item).children("dd").children(".list-dl-t").children("a").attr('href'));
+                    var deckUrl = hostUrl + $(item).children("dd").children(".list-dl-t").children("a").attr('href');
+                    // console.log(deckUrl);
+                    getSingleDeck163(deckUrl,function(err,deck) {
+                        // body...
+                        HearthStone.Deck.update({deckSourceUrl:deckUrl},{$set:{deckSourceUrl:deckUrl,cards:deck}},{upsert:true},function(err,num){
+                            console.log("deck done",deckUrl);
+                        });
+                    })
+                });
+                if ($(".c_page-next")) {
+                    scanpage($(".c_page-next").attr('href'));
+                };
+            }else{
+
+            }
+            
+        });
+    }
+    scanpage (startUrl);
+    res.send("getdecks163");
+}
+
+function getSingleDeck163(url,callback){
+    console.log("deck url",url);
+    var deck = [];
+    request(url, function (error, response, body) {
+        if (!error) {
+            var $ = cheerio.load(body);
+            // console.log($("#cardsDataStr").attr("value"));
+            var cardsData = $("#cardsDataStr").attr("value");
+            cardsData = JSON.parse(cardsData);
+            for (var i = 0; i < cardsData; i++) {
+                deck.push({
+                    cardName:cardsData[i].name
+                });
+            };
+            callback(error,deck);
+        } else {
+            console.log("We’ve encountered an error: " + error);
+            callback(error,null);
+        }
+    });
+}
+
 function getcards163 (req,res) {
     //http://db.h.163.com/cards/filter?filter=Rarity%3D1%3A2%3A3%3A4%3A5&page=80
     var sourceUrl = 'http://db.h.163.com/cards/filter?filter=Rarity%3D1%3A2%3A3%3A4%3A5&page=';
