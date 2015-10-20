@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel='stylesheet' href='./lisear.css' />
+</head>
+<body>
+    <div class="lisear-container">
+        <div class="lisear-input-area">
+            <input type="search" placeholder="搜索" value=""/>
+        </div>
+        <ul class="lisear-list"></ul>
+    </div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <div>hehe</div>
+    <script src="./zepto.min.js"></script>
+    <script src="./lisear.js"></script>
+    <script type="text/javascript">
+        $(".lisear-container").lisear({
+            dataSourceUrl:"/tokyo/customer/searchkeywords",
+            targetUrl:"/tokyo/customer/productlist"
+        });
+        // $(".lisear-container").lisear({
+        //     dataSource:['sdf','bbgh','br','bbttgh','btgbgh','bbgvh'],
+        //     targetUrl:"/tokyo/customer/productlist"
+        // });
+    </script>
+</body>
+</html>
