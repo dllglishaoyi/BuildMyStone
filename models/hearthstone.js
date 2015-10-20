@@ -30,6 +30,25 @@ var CardSchema = mongoose.Schema({
 });
 exports.Card = mongoose.model('Card', CardSchema);
 
+var Card163Schema = mongoose.Schema({
+    attack:Number,
+    card_id:String,
+    collectible:Boolean,
+    cost:Number,
+    health:Number,
+    id:String,
+    img :String,
+    klass:Number,
+    name:String,
+    powers:[String],
+    race :Number,
+    rarity:Number,
+    // set:Number,
+    type:Number,
+    url:String
+});
+exports.Card163 = mongoose.model('Card163', Card163Schema);
+
 var UserSchema = mongoose.Schema({
     userName:String,
     cards:[{

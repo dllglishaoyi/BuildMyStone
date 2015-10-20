@@ -35,6 +35,20 @@ router.get('/getcards163',getcards163);
 
 router.get('/getdecks163',getdecks163);
 
+router.get('/importcards163',importcards163);
+
+function importcards163 (req,res) {
+    var cards = require("./cards.json");
+    async.each(cards,function(card,callback){
+        console.log(card);
+        HearthStone.Card163.update({id:card.id},{$set:card},{upsert:true},function(err,num){
+            callback();
+        });
+    },function(err){
+        res.send("import complete");
+    });
+    // 
+}
 function getdecks163 (req,res) {
     var startUrl = "http://tools.h.163.com/list/99/0/0/create_time";
     var hostUrl = "http://tools.h.163.com/"
