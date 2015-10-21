@@ -6,12 +6,14 @@
         this._gridArea = null;
         this._currentPage = 1;
         this._data = null;
+        this._userDataMap = {};
 
         // Define option defaults
         var defaults = {
             currentPage : 1,
             countPerpage : 20,
-            itemCountMax:2
+            itemCountMax:2,
+            userData:[]
         }
         // Create options by extending defaults with the passed in arugments
         if (arguments[0] && typeof arguments[0] === "object") {
@@ -46,11 +48,13 @@
             // console.log(e.target.classList);
             if (hasclass(e.target,"ligrid-li")) {
                 var currentCount = e.target.getAttribute("data-count");
+                var name = e.target.getAttribute("data-name");
                 if (that.options.itemCountMax > currentCount) {
                     currentCount ++ ;
                 }else{
                     currentCount = 0;
                 }
+                that._userDataMap[name] = currentCount;
                 e.target.setAttribute('data-count',currentCount);
                 var countElement = e.target.getElementsByClassName("count")[0];
                 countElement.innerHTML = currentCount > 0 ? "*"+currentCount : '';
@@ -63,13 +67,14 @@
         return element.classList.contains(className);
     }
 
-    function fillData(element,data){
+    function fillData(element,data,userDataMap){
         element.innerHTML = "";
         for (var i = 0; i < data.length; i++) {
             var item = document.createElement("li");
             item.className = "ligrid-li";
+            item.setAttribute('data-name',data[i].name);
             item.setAttribute('data-count',0);
-            item.innerHTML = data[i].name+'<span class="count"></span>';
+            item.innerHTML = data[i].name+'<span class="count">'+(userDataMap[data[i].name] ? "*" + userDataMap[data[i].name] : '')+'</span>';
             element.appendChild(item);
         };
     }
@@ -84,11 +89,16 @@
         return source;
     }
 
+    Ligrid.prototype.showData = function() {
+        var that = this;
+        console.log(that._userDataMap);
+    }
+
     Ligrid.prototype.fillData = function(data) {
         var that = this;
         if (that._gridArea) {
             var pageData = data.slice(20*(that._currentPage-1),20*that._currentPage);
-            fillData(that._gridArea,pageData);
+            fillData(that._gridArea,pageData,that._userDataMap);
         };
     }
 
@@ -100,7 +110,7 @@
         that._currentPage--;
         if (that._gridArea && that._data) {
             var pageData = that._data.slice(20*(that._currentPage-1),20*that._currentPage);
-            fillData(that._gridArea,pageData);
+            fillData(that._gridArea,pageData,that._userDataMap);
         };
     }
 
@@ -111,7 +121,7 @@
             var pageData = that._data.slice(20*(that._currentPage),20*(that._currentPage+1));
             if (pageData && pageData.length > 0) {
                 that._currentPage++;
-                fillData(that._gridArea,pageData);
+                fillData(that._gridArea,pageData,that._userDataMap);
             };
         };
     }
@@ -122,7 +132,21 @@
         if (that._gridArea && that._data) {
             that._currentPage = 1;
             var pageData = data.slice(20*(that._currentPage-1),20*that._currentPage);
-            fillData(that._gridArea,pageData);
+            fillData(that._gridArea,pageData,that._userDataMap);
         };
+    }
+
+    Ligrid.prototype.getSelectedData = function() {
+        var that = this;
+        var property;
+        var data = [];
+        for (property in that._userDataMap) {
+            if (that._userDataMap.hasOwnProperty(property)) {
+                for (var i = 0; i < that._userDataMap[property]; i++) {
+                    data.push(property);
+                };
+            }
+        }
+        return data;
     }
 })();

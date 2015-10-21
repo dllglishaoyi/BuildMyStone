@@ -8,6 +8,7 @@
 <body>
     <div id="ligrid">
     </div>
+    <button id="testBtn">test</button>
     <script src="./zepto.min.js"></script>
     <script src="./ligrid.js"></script>
     <script type="text/javascript">
@@ -12508,6 +12509,10 @@
 
         var ligrid = new Ligrid({countPerpage:20,gridid:"ligrid"});
         ligrid.loadData(cards);
+        document.getElementById("testBtn").addEventListener("click",function(e){
+            ligrid.showData();
+            console.log(ligrid.getSelectedData());
+        });
     </script>
 </body>
 </html>
