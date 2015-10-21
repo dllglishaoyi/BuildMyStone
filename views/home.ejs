@@ -8,6 +8,9 @@
 <body>
     <input type="search" id="search">
     <button id="searchBtn">搜索</button>
+    <br>
+    <input type="test" id="username" placeholder="用户名" value="<%= userdata ? userdata.userName : ''%>">
+    <button id="upload">上传卡组</button>
     <div id="ligrid">
     </div>
     <button id="goBtn">推荐卡组</button>
@@ -18,8 +21,9 @@
     <script src="/plugins/ligrid/ligrid.js"></script>
     <script type="text/javascript">
         var cards = <%- JSON.stringify(cards)%>;
+        var userdata = <%- JSON.stringify(userdata.cards)%>;
 
-        var ligrid = new Ligrid({countPerpage:20,gridid:"ligrid"});
+        var ligrid = new Ligrid({countPerpage:20,gridid:"ligrid",userData:userdata});
         ligrid.loadData(cards);
         document.getElementById("searchBtn").addEventListener("click",function(e){
             var keyword = document.getElementById('search').value;
@@ -48,6 +52,28 @@
               success: function(data){
                 console.log(data);
                 showDecks(data);
+              },
+              error: function(xhr, type){
+                alert('Ajax error!')
+              }
+            });
+        });
+
+        document.getElementById("upload").addEventListener("click",function(e){
+            var username = document.getElementById('username').value;
+            if (!username) {
+                alert("请输入用户名");
+                return;
+            };
+            var cardsdata = ligrid.getSelectedData();
+            $.ajax({
+              type: 'POST',
+              url: '/uploadusercards',
+              data: {username:username, cards:cardsdata},
+              dataType: 'json',
+              timeout: 15000,
+              success: function(data){
+                console.log(data);
               },
               error: function(xhr, type){
                 alert('Ajax error!')

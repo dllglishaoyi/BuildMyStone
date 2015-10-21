@@ -19,6 +19,17 @@
         if (arguments[0] && typeof arguments[0] === "object") {
             this.options = extendDefaults(defaults, arguments[0]);
         }
+
+        // this._userDataMap = 
+        var userData = this.options.userData;
+        for (var i = 0; i < userData.length; i++) {
+            if (this._userDataMap[userData[i]]) {
+                this._userDataMap[userData[i]] = this._userDataMap[userData[i]] + 1;
+            }else{
+                this._userDataMap[userData[i]] = 1;
+            }
+        };
+
         initLayout.call(this);
     }
 
@@ -74,7 +85,7 @@
             item.className = "ligrid-li";
             item.setAttribute('data-name',data[i].name);
             item.setAttribute('data-count',0);
-            item.innerHTML = data[i].name+'<span class="count">'+(userDataMap[data[i].name] ? "*" + userDataMap[data[i].name] : '')+'</span>';
+            item.innerHTML = data[i].name+"("+data[i].cost+")"+'<span class="count">'+(userDataMap[data[i].name] ? "*" + userDataMap[data[i].name] : '')+'</span>';
             element.appendChild(item);
         };
     }

@@ -21,16 +21,38 @@ router.get('/getcards',getcards);
 router.get('/matchdeck',matchdeck);
 
 router.post('/getrecommenddecks',getrecommenddecks);
+router.post('/uploadusercards',uploadusercards);
 
-router.get('/home',home);
+
+router.get('/home/:username?',home);
 
 module.exports = router;
 
 function home(req,res){
-  HearthStone.Card163.find(function(err,cards) {
-    res.render('home',{cards:cards});
-  });
+  if (req.params.username) {
+    HearthStone.User.findOne({userName:req.params.username},function(err,userdata){
+      HearthStone.Card163.find(function(err,cards) {
+        res.render('home',{cards:cards,userdata:userdata});
+      });
+    });
+  }else{
+    HearthStone.Card163.find(function(err,cards) {
+      res.render('home',{cards:cards,userdata:null});
+    });
+  }
+  
 };
+
+function uploadusercards (req,res) {
+  console.log(req.body);
+  var userdata = {
+    userName : req.body.username,
+    cards :req.body["cards[]"] || req.body.cards
+  }
+  HearthStone.User.update({userName:req.body.username},{$set:userdata},function(err,num){
+    res.json(err);
+  });
+}
 
 function getrecommenddecks(req,res){
     var recommendDecks = [];

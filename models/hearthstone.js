@@ -51,8 +51,6 @@ exports.Card163 = mongoose.model('Card163', Card163Schema);
 
 var UserSchema = mongoose.Schema({
     userName:String,
-    cards:[{
-        cardName:String
-    }]
+    cards:[String]
 });
 exports.User = mongoose.model('User', UserSchema);
