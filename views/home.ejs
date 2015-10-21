@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel='stylesheet' href='/plugins/ligrid/ligrid.css' />
+</head>
+<body>
+    <div id="ligrid">
+    </div>
+    <button id="goBtn">推荐卡组</button>
+    <script src="/javascripts/zepto.min.js"></script>
+    <script src="/plugins/ligrid/ligrid.js"></script>
+    <script type="text/javascript">
+        var cards = <%- JSON.stringify(cards)%>;
+
+        var ligrid = new Ligrid({countPerpage:20,gridid:"ligrid"});
+        ligrid.loadData(cards);
+        document.getElementById("goBtn").addEventListener("click",function(e){
+            ligrid.showData();
+            console.log(ligrid.getSelectedData());
+            var cardsdata = ligrid.getSelectedData();
+            var postData = { cards: cardsdata };
+            $.ajax({
+              type: 'POST',
+              url: '/getrecommenddecks',
+              // data to be added to query string:
+              data: postData,
+              // type of data we are expecting in return:
+              dataType: 'json',
+              timeout: 5000,
+              success: function(data){
+                console.log(data);
+              },
+              error: function(xhr, type){
+                alert('Ajax error!')
+              }
+            });
+        });
+    </script>
+</body>
+</html>

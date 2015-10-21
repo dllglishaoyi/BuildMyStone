@@ -20,7 +20,45 @@ router.get('/getcards',getcards);
 
 router.get('/matchdeck',matchdeck);
 
+router.post('/getrecommenddecks',getrecommenddecks);
+
+router.get('/home',home);
+
 module.exports = router;
+
+function home(req,res){
+  HearthStone.Card163.find(function(err,cards) {
+    res.render('home',{cards:cards});
+  });
+};
+
+function getrecommenddecks(req,res){
+    var recommendDecks = [];
+    var ids = [];//for debug
+    console.log(req.body);
+    var usercards = req.body["cards[]"] || req.body.cards;
+    // res.json();
+    HearthStone.Deck.find(function(err,decks){
+      async.eachSeries(decks,function(deck,callback){
+        var cards = unionCards(usercards,deck.cards,deck._id);
+        if (recommendDecks.length < 3) {
+          recommendDecks.push(cards);
+          ids.push(deck._id);//for debug
+        }else{
+          for (var i = 0; i < recommendDecks.length; i++) {
+            if(cards.sameCards.length > recommendDecks[i].sameCards.length){
+              recommendDecks[i] = cards;
+              ids[i] = deck._id;//for debug
+            }
+          };
+        }
+        callback();
+      },function(err){
+        console.log(ids);//for debug
+        res.send(recommendDecks);
+      });
+    });
+};
 
 function matchdeck(req,res){
     var recommendDecks = [];
@@ -58,7 +96,7 @@ function unionCards(cards,deck,deckid){
   var sameArray = [];
   var originalDeck = new Array(deck);
   cards = _.map(cards,function(item){
-    return item.cardName;
+    return item.cardName ? item.cardName : item;
   });
   deck = _.map(deck,function(item){
     return item.cardName;

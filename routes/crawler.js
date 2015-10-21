@@ -63,6 +63,7 @@ function getdecks163 (req,res) {
                     var deckUrl = hostUrl + $(item).children("dd").children(".list-dl-t").children("a").attr('href');
                     // console.log(deckUrl);
                     getSingleDeck163(deckUrl,function(err,deck) {
+                        console.log(deck);
                         // body...
                         HearthStone.Deck.update({deckSourceUrl:deckUrl},{$set:{deckSourceUrl:deckUrl,cards:deck}},{upsert:true},function(err,num){
                             console.log("deck done",deckUrl);
@@ -91,7 +92,8 @@ function getSingleDeck163(url,callback){
             // console.log($("#cardsDataStr").attr("value"));
             var cardsData = $("#cardsDataStr").attr("value");
             cardsData = JSON.parse(cardsData);
-            for (var i = 0; i < cardsData; i++) {
+            // console.log("cardsData",cardsData);
+            for (var i = 0; i < cardsData.length; i++) {
                 deck.push({
                     cardName:cardsData[i].name
                 });
