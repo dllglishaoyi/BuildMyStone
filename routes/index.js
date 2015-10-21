@@ -41,7 +41,7 @@ function getrecommenddecks(req,res){
     HearthStone.Deck.find(function(err,decks){
       async.eachSeries(decks,function(deck,callback){
         // deck.cards.sort();
-        var cards = unionCards(usercards,deck.cards,deck._id);
+        var cards = unionCards(usercards,deck,deck._id);
         if (recommendDecks.length < 3) {
           recommendDecks.push(cards);
         }else{
@@ -91,6 +91,8 @@ function matchdeck(req,res){
 }
 
 function unionCards(cards,deck,deckid){
+  var deckSourceUrl = deck.deckSourceUrl;
+  deck = deck.cards;
   var sameArray = [];
   var originalDeck = deck;
   cards = _.map(cards,function(item){
@@ -111,7 +113,8 @@ function unionCards(cards,deck,deckid){
     percent:(sameArray.length*100/30).toFixed(0) + "%",
     deckid:deckid,
     sameCards:sameArray,
-    originalDeck:originalDeck
+    originalDeck:originalDeck,
+    deckSourceUrl:deckSourceUrl
   };
 }
 
