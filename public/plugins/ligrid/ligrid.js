@@ -82,10 +82,24 @@
         element.innerHTML = "";
         for (var i = 0; i < data.length; i++) {
             var item = document.createElement("li");
+            var nameElement = document.createElement("span");
+            nameElement.innerHTML = data[i].name+"("+data[i].cost+")";
+
+            var countElement = document.createElement("span");
+            countElement.className = "count";
+            countElement.innerHTML = userDataMap[data[i].name] ? "*" + userDataMap[data[i].name] : '';
+
+            var imgElement = document.createElement("img");
+            imgElement.src = data[i].img;
+
             item.className = "ligrid-li";
             item.setAttribute('data-name',data[i].name);
             item.setAttribute('data-count',0);
-            item.innerHTML = data[i].name+"("+data[i].cost+")"+'<span class="count">'+(userDataMap[data[i].name] ? "*" + userDataMap[data[i].name] : '')+'</span>';
+
+            item.appendChild(imgElement);
+            item.appendChild(nameElement);
+            item.appendChild(countElement);
+
             element.appendChild(item);
         };
     }
