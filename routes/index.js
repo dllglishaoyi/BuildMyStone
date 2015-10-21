@@ -40,18 +40,18 @@ function getrecommenddecks(req,res){
     // res.json();
     HearthStone.Deck.find(function(err,decks){
       async.eachSeries(decks,function(deck,callback){
+        // deck.cards.sort();
         var cards = unionCards(usercards,deck.cards,deck._id);
         if (recommendDecks.length < 3) {
           recommendDecks.push(cards);
-          ids.push(deck._id);//for debug
         }else{
-          for (var i = 0; i < recommendDecks.length; i++) {
-            if(cards.sameCards.length > recommendDecks[i].sameCards.length){
-              recommendDecks[i] = cards;
-              ids[i] = deck._id;//for debug
+            if(cards.sameCards.length > recommendDecks[2].sameCards.length){
+              recommendDecks[2] = cards;
             }
-          };
         }
+        recommendDecks.sort(function(a,b) {
+          return b.sameCards.length - a.sameCards.length;
+        });
         callback();
       },function(err){
         console.log(ids);//for debug
@@ -70,18 +70,16 @@ function matchdeck(req,res){
             var cards = unionCards(user.cards,deck.cards,deck._id);
             if (recommendDecks.length < 3) {
               recommendDecks.push(cards);
-              ids.push(deck._id);//for debug
             }else{
-              for (var i = 0; i < recommendDecks.length; i++) {
-                if(cards.sameCards.length > recommendDecks[i].sameCards.length){
-                  recommendDecks[i] = cards;
-                  ids[i] = deck._id;//for debug
+                if(cards.sameCards.length > recommendDecks[2].sameCards.length){
+                  recommendDecks[2] = cards;
                 }
-              };
             }
+            recommendDecks.sort(function(a,b) {
+              return a.sameCards.length - b.sameCards.length;
+            });
             callback();
           },function(err){
-            console.log(ids);//for debug
             res.send(recommendDecks);
           });
         });
@@ -94,7 +92,7 @@ function matchdeck(req,res){
 
 function unionCards(cards,deck,deckid){
   var sameArray = [];
-  var originalDeck = new Array(deck);
+  var originalDeck = deck;
   cards = _.map(cards,function(item){
     return item.cardName ? item.cardName : item;
   });
@@ -110,7 +108,7 @@ function unionCards(cards,deck,deckid){
     }
   };
   return {
-    percet:(sameArray.length*100/30).toFixed(0) + "%",
+    percent:(sameArray.length*100/30).toFixed(0) + "%",
     deckid:deckid,
     sameCards:sameArray,
     originalDeck:originalDeck

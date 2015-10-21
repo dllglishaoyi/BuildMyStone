@@ -9,6 +9,9 @@
     <div id="ligrid">
     </div>
     <button id="goBtn">推荐卡组</button>
+    <div id="decks-area">
+
+    </div>
     <script src="/javascripts/zepto.min.js"></script>
     <script src="/plugins/ligrid/ligrid.js"></script>
     <script type="text/javascript">
@@ -17,8 +20,8 @@
         var ligrid = new Ligrid({countPerpage:20,gridid:"ligrid"});
         ligrid.loadData(cards);
         document.getElementById("goBtn").addEventListener("click",function(e){
-            ligrid.showData();
-            console.log(ligrid.getSelectedData());
+            // ligrid.showData();
+            // console.log(ligrid.getSelectedData());
             var cardsdata = ligrid.getSelectedData();
             var postData = { cards: cardsdata };
             $.ajax({
@@ -28,15 +31,43 @@
               data: postData,
               // type of data we are expecting in return:
               dataType: 'json',
-              timeout: 5000,
+              timeout: 15000,
               success: function(data){
                 console.log(data);
+                showDecks(data);
               },
               error: function(xhr, type){
                 alert('Ajax error!')
               }
             });
         });
+        function showDecks(decks){
+            var decksArea = document.getElementById("decks-area");
+            decksArea.innerHTML = "";
+            for (var i = 0; i < decks.length; i++) {
+                addDeck(decks[i]);
+            };
+        }
+        function addDeck(deck){
+            var deckList = document.createElement("ul");
+            deckList.className = "deck";
+            var deckHeader = document.createElement("li");
+            deckHeader.innerHTML = "相似度："+deck.percent;
+            deckList.appendChild(deckHeader);
+            for (var i = 0; i < deck.originalDeck.length; i++) {
+                var cardItem = document.createElement("li");
+                var flag = false;
+                var a = deck.sameCards.indexOf(deck.originalDeck[i].cardName);
+                if (a >=0) {
+                    deck.sameCards.splice(a, 1); 
+                    flag = true;
+                };
+                cardItem.innerHTML = deck.originalDeck[i].cardName + (flag ? "(您有)" : '');
+                deckList.appendChild(cardItem);
+            };
+            var decksArea = document.getElementById("decks-area");
+            decksArea.appendChild(deckList);
+        }
     </script>
 </body>
 </html>
