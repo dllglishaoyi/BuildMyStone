@@ -6,6 +6,8 @@
 <link rel='stylesheet' href='/plugins/ligrid/ligrid.css' />
 </head>
 <body>
+    <input type="search" id="search">
+    <button id="searchBtn">搜索</button>
     <div id="ligrid">
     </div>
     <button id="goBtn">推荐卡组</button>
@@ -19,6 +21,17 @@
 
         var ligrid = new Ligrid({countPerpage:20,gridid:"ligrid"});
         ligrid.loadData(cards);
+        document.getElementById("searchBtn").addEventListener("click",function(e){
+            var keyword = document.getElementById('search').value;
+            if (keyword) {
+                var newcards = cards.filter(function(item) {
+                    return item.name.indexOf(keyword) > -1;
+                });
+                ligrid.loadData(newcards);
+            }else{
+                ligrid.loadData(cards);
+            }
+        });
         document.getElementById("goBtn").addEventListener("click",function(e){
             // ligrid.showData();
             // console.log(ligrid.getSelectedData());
