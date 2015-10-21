@@ -10,7 +10,8 @@
         // Define option defaults
         var defaults = {
             currentPage : 1,
-            countPerpage : 20
+            countPerpage : 20,
+            itemCountMax:2
         }
         // Create options by extending defaults with the passed in arugments
         if (arguments[0] && typeof arguments[0] === "object") {
@@ -23,6 +24,7 @@
         var that = this;
         var gridElement = this._gridElement = document.getElementById(that.options.gridid);
         var gridArea = this._gridArea = document.createElement("ul");
+        gridArea.className = "ligrid-ul";
         gridElement.appendChild(gridArea);
 
         //empty gridElement
@@ -39,13 +41,35 @@
         nextPageBtn.addEventListener("click",function (e) {
             that.nextPage();
         });
+
+        document.addEventListener("click",function (e) {
+            // console.log(e.target.classList);
+            if (hasclass(e.target,"ligrid-li")) {
+                var currentCount = e.target.getAttribute("data-count");
+                if (that.options.itemCountMax > currentCount) {
+                    currentCount ++ ;
+                }else{
+                    currentCount = 0;
+                }
+                e.target.setAttribute('data-count',currentCount);
+                var countElement = e.target.getElementsByClassName("count")[0];
+                countElement.innerHTML = currentCount > 0 ? "*"+currentCount : '';
+            };
+        });
+    }
+
+    function hasclass (element,className) {
+        // return /\b\b/.test(element);
+        return element.classList.contains(className);
     }
 
     function fillData(element,data){
         element.innerHTML = "";
         for (var i = 0; i < data.length; i++) {
             var item = document.createElement("li");
-            item.innerHTML = data[i].name;
+            item.className = "ligrid-li";
+            item.setAttribute('data-count',0);
+            item.innerHTML = data[i].name+'<span class="count"></span>';
             element.appendChild(item);
         };
     }
