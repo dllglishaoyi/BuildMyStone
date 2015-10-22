@@ -107,6 +107,11 @@
             var decksArea = document.getElementById("decks-area");
             decksArea.appendChild(deckList);
         }
+        // if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+            $(".ligrid-li").click(function() {
+                ligrid.itemClick(this);
+            });
+        // };
     </script>
 </body>
 </html>

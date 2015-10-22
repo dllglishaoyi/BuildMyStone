@@ -54,23 +54,26 @@
         nextPageBtn.addEventListener("click",function (e) {
             that.nextPage();
         });
-
         document.addEventListener("click",function (e) {
-            // console.log(e.target.classList);
             if (hasclass(e.target,"ligrid-li")) {
-                var currentCount = e.target.getAttribute("data-count");
-                var name = e.target.getAttribute("data-name");
-                if (that.options.itemCountMax > currentCount) {
-                    currentCount ++ ;
-                }else{
-                    currentCount = 0;
-                }
-                that._userDataMap[name] = currentCount;
-                e.target.setAttribute('data-count',currentCount);
-                var countElement = e.target.getElementsByClassName("count")[0];
-                countElement.innerHTML = currentCount > 0 ? "*"+currentCount : '';
+                //暂时注释
+                // liClickHandler.call(that,e.target);
             };
         });
+    }
+
+    function liClickHandler(element){
+        var currentCount = element.getAttribute("data-count");
+        var name = element.getAttribute("data-name");
+        if (this.options.itemCountMax > currentCount) {
+            currentCount ++ ;
+        }else{
+            currentCount = 0;
+        }
+        this._userDataMap[name] = currentCount;
+        element.setAttribute('data-count',currentCount);
+        var countElement = element.getElementsByClassName("count")[0];
+        countElement.innerHTML = currentCount > 0 ? "*"+currentCount : '';
     }
 
     function hasclass (element,className) {
@@ -112,6 +115,11 @@
             }
         }
         return source;
+    }
+
+    Ligrid.prototype.itemClick = function(element) {
+        var that = this;
+        liClickHandler.call(that,element);
     }
 
     Ligrid.prototype.showData = function() {
