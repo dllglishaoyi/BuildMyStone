@@ -49,7 +49,7 @@ function uploadusercards (req,res) {
     userName : req.body.username,
     cards :req.body["cards[]"] || req.body.cards
   }
-  HearthStone.User.update({userName:req.body.username},{$set:userdata},function(err,num){
+  HearthStone.User.update({userName:req.body.username},{$set:userdata},{upsert:true},function(err,num){
     res.json(err);
   });
 }
