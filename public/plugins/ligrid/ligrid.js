@@ -36,18 +36,21 @@
     function initLayout(){
         var that = this;
         var gridElement = this._gridElement = document.getElementById(that.options.gridid);
+
+         var nextPageBtn = document.createElement("Button");
+        nextPageBtn.innerHTML = "下一页";
+        var prePageBtn = document.createElement("Button");
+        prePageBtn.innerHTML = "上一页";
+        gridElement.appendChild(prePageBtn);
+        gridElement.appendChild(nextPageBtn);
+
         var gridArea = this._gridArea = document.createElement("ul");
         gridArea.className = "ligrid-ul";
         gridElement.appendChild(gridArea);
 
         //empty gridElement
         gridArea.innerHTML = "";
-        var nextPageBtn = document.createElement("Button");
-        nextPageBtn.innerHTML = "nextPage";
-        var prePageBtn = document.createElement("Button");
-        prePageBtn.innerHTML = "prePageBtn";
-        gridElement.appendChild(prePageBtn);
-        gridElement.appendChild(nextPageBtn);
+       
         prePageBtn.addEventListener("click",function (e) {
             that.prePage();
         });
@@ -99,9 +102,13 @@
             item.setAttribute('data-name',data[i].name);
             item.setAttribute('data-count',0);
 
-            // item.appendChild(imgElement);
-            item.appendChild(nameElement);
-            item.appendChild(countElement);
+            item.appendChild(imgElement);
+
+            var itemFooter = document.createElement("div");
+            itemFooter.className = "ligrid-li-footer";
+            itemFooter.appendChild(nameElement);
+            itemFooter.appendChild(countElement);
+            item.appendChild(itemFooter);
 
             element.appendChild(item);
         };

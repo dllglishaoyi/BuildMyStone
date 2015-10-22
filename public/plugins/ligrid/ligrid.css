@@ -1,6 +1,8 @@
 .ligrid-ul{
     padding: 0;
     margin: 0;
+    display: block;
+    overflow: hidden;
 }
 
 .ligrid-li:nth-child(2n){
@@ -13,15 +15,29 @@
 
 .ligrid-li{
     /*height: 100px;*/
-    list-style:none; 
+    list-style:none;
+    width:25%;
+    float: left;
+    /*min-height: 156px;*/
+    overflow: hidden;
+    position: relative;
+    /*margin-bottom: 15px;*/
 }
 
 .ligrid-li img{
-    height: 100%;
+    width: 100%;
+    /*height: 100%;*/
     display: block;
-    float: left;
 }
-
+.ligrid-li-footer{
+    /*border-top: solid;*/
+    /*background: #F7F000;*/
+    text-align: center;
+    font-size: 10px;
+    display: block;
+    line-height: 18px;
+    position: relative;
+}
 /*.ligrid-li span{
     height: 100px;
     line-height: 100px;
