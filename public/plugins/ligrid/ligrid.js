@@ -96,7 +96,7 @@
             item.setAttribute('data-name',data[i].name);
             item.setAttribute('data-count',0);
 
-            item.appendChild(imgElement);
+            // item.appendChild(imgElement);
             item.appendChild(nameElement);
             item.appendChild(countElement);
 
