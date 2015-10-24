@@ -12,10 +12,10 @@
     <input type="test" id="username" placeholder="用户名" value="<%= userdata ? userdata.userName : ''%>">
     <button id="upload">上传卡组</button>
     <button id="goBtn">推荐卡组</button>
-    <div id="ligrid">
+    <div  id="ligrid">
     </div>
-    
-    <div id="decks-area">
+    <a id="decks-area-btn" href="#decks-area"></a>
+    <div name="decks-area" id="decks-area">
 
     </div>
     <script src="/javascripts/zepto.min.js"></script>
@@ -107,6 +107,8 @@
             };
             var decksArea = document.getElementById("decks-area");
             decksArea.appendChild(deckList);
+            $("#decks-area-btn").click();
+
         }
         // if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
             // $(".ligrid-li").click(function() {
