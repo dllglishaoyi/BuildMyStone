@@ -58,10 +58,13 @@
             that.nextPage();
         });
         document.addEventListener("click",function (e) {
+            // console.log(e.target.parentNode);
+            var parentNode = e.target.parentNode;
             if (hasclass(e.target,"ligrid-li")) {
-                //暂时注释
-                // liClickHandler.call(that,e.target);
-            };
+                liClickHandler.call(that,e.target);
+            }else if(hasclass(parentNode,"ligrid-li")){
+                liClickHandler.call(that,parentNode);
+            }
         });
     }
 
