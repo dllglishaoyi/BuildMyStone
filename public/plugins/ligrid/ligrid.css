@@ -5,23 +5,26 @@
     overflow: hidden;
 }
 
-.ligrid-li:nth-child(2n){
+/*.ligrid-li:nth-child(2n){
     background: #ffffff;
 }
 
 .ligrid-li:nth-child(2n+1){
     background: #F7F7F9;
+}*/
+.ligrid-li-selected{
+    background: #2E79B9;
 }
 
 .ligrid-li{
-    /*height: 100px;*/
+    height: 150px;
     list-style:none;
     width:25%;
     float: left;
     /*min-height: 156px;*/
     overflow: hidden;
     position: relative;
-    /*margin-bottom: 15px;*/
+    margin-bottom: 2px;
 }
 
 .ligrid-li img{

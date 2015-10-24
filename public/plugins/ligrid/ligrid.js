@@ -76,6 +76,13 @@
         }else{
             currentCount = 0;
         }
+        if (!currentCount) {
+            element.className = element.className.replace("ligrid-li-selected","") ;
+        }else{
+            if (element.className.indexOf("ligrid-li-selected") < 0) {
+              element.className = element.className + " ligrid-li-selected";  
+            };
+        }
         this._userDataMap[name] = currentCount;
         element.setAttribute('data-count',currentCount);
         var countElement = element.getElementsByClassName("count")[0];
@@ -101,7 +108,7 @@
             var imgElement = document.createElement("img");
             imgElement.src = data[i].img;
 
-            item.className = "ligrid-li";
+            item.className = "ligrid-li" + (userDataMap[data[i].name] ? " ligrid-li-selected" : "");
             item.setAttribute('data-name',data[i].name);
             item.setAttribute('data-count',0);
 
