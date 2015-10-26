@@ -1,8 +1,15 @@
 .ligrid-ul{
     padding: 0;
     margin: 0;
-    display: block;
-    overflow: hidden;
+    /*display: block;*/
+    display: flex;
+    -webkit-justify-content: space-around;
+    justify-content: space-around;
+     -webkit-flex-direction: row; /* Safari */
+    flex-direction:         row;
+    -webkit-flex-wrap: wrap; /* Safari */
+  flex-wrap:         wrap;
+
 }
 
 /*.ligrid-li:nth-child(2n){
@@ -17,11 +24,14 @@
 }
 
 .ligrid-li{
-    height: 150px;
+    /*height: 150px;*/
+
     list-style:none;
-    width:25%;
-    float: left;
-    /*min-height: 156px;*/
+    width:100px;
+
+    /*float: left;*/
+
+
     overflow: hidden;
     position: relative;
     margin-bottom: 2px;
