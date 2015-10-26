@@ -3,8 +3,8 @@
     margin: 0;
     /*display: block;*/
     display: flex;
-    -webkit-justify-content: space-around;
-    justify-content: space-around;
+    -webkit-justify-content: flex-start; /* Safari */
+  justify-content:         flex-start;
      -webkit-flex-direction: row; /* Safari */
     flex-direction:         row;
     -webkit-flex-wrap: wrap; /* Safari */
