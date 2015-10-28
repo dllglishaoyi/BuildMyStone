@@ -37,6 +37,38 @@ router.get('/getdecks163',getdecks163);
 
 router.get('/importcards163',importcards163);
 
+router.get('/getdecksduowan',getdecksduowan);
+
+function getdecksduowan (req,res) {
+    var startUrl = "http://ls.duowan.com/tag/246972432372";
+    var page = 1;
+    var pageCount = 9;
+
+    function scanpage (pageurl) {
+        superagent.get(pageurl)
+        .end(function (err, result) {
+            // res.send(result);
+            console.log(pageurl);
+            if (result) {
+                
+                // if ($(".c_page-next")) {
+                //     scanpage($(".c_page-next").attr('href'));
+                // };
+                if (page < pageCount) {
+                    page ++ 
+                    scanpage (startUrl+"_"+page+".html");
+                };
+                
+            }else{
+
+            }
+            
+        });
+    }
+    scanpage (startUrl +".html");
+    
+}
+
 function importcards163 (req,res) {
     var cards = require("./cards.json");
     async.each(cards,function(card,callback){

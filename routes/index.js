@@ -10,9 +10,7 @@ var imageFolder = 'public/images/card/';
 var utils = require('../lib/utils');
 var HearthStone = require('../models/hearthstone');
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+router.get('/', home);
 
 router.get('/allcards',allcards);
 router.get('/all163cards',all163cards);
