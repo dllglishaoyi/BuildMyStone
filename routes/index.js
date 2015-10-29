@@ -58,7 +58,7 @@ function getrecommenddecks(req,res){
     console.log(req.body);
     var usercards = req.body["cards[]"] || req.body.cards;
     // res.json();
-    HearthStone.Deck.find(function(err,decks){
+    HearthStone.Deck.find({channel:"duowan"},function(err,decks){
       async.eachSeries(decks,function(deck,callback){
         // deck.cards.sort();
         var cards = unionCards(usercards,deck,deck._id);

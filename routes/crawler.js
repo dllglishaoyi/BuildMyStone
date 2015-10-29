@@ -61,8 +61,12 @@ function getdecksduowan (req,res) {
                     var deckUrl = "http://ls.duowan.com"+$(item).children("a").attr('href');
                     getSingleDeckDuowan(deckUrl,function(err,deck) {
                         // body...
-                        console.log(deck);
-                        callback();
+                        HearthStone.Deck.update({deckSourceUrl:deckUrl},{$set:{channel:"duowan",deckSourceUrl:deckUrl,cards:deck}},{upsert:true},function(err,num){
+                            console.log("deck done",err,deckUrl);
+                            console.log(deck);
+                            callback();
+                        });
+                        
                     });
                 
                 }, function(err){
@@ -106,10 +110,23 @@ function getSingleDeckDuowan(url,callback){
                   ph.createPage(function (page) {
                     page.open(realUrl, function (status) {
                       console.log("opened page? ", status);
-                      page.evaluate(function () { return $(".list-box").html(); }, function (result) {
-                        console.log('list-box content is ' + result);
+                      page.evaluate(
+                        function () { 
+                            var deck = [];
+                            $(".list-box li").each(function(index,item) {
+                                var cardcount = $(item).find("span").text().substring(1);
+                                for (var i = 0; i < cardcount; i++) {
+                                    deck.push({
+                                        cardName:$(item).find("p").text()
+                                    });
+                                };
+                                
+                            });
+                            return deck; 
+                        }, function (result) {
+                        console.log('list-box content is ',result);
                         ph.exit();
-                        callback("deck finish",null);
+                        callback(null,result);
                       });
                     });
                   });
@@ -159,7 +176,7 @@ function getdecks163 (req,res) {
                     getSingleDeck163(deckUrl,function(err,deck) {
                         console.log(deck);
                         // body...
-                        HearthStone.Deck.update({deckSourceUrl:deckUrl},{$set:{deckSourceUrl:deckUrl,cards:deck}},{upsert:true},function(err,num){
+                        HearthStone.Deck.update({deckSourceUrl:deckUrl},{$set:{channel:"163",deckSourceUrl:deckUrl,cards:deck}},{upsert:true},function(err,num){
                             console.log("deck done",deckUrl);
                         });
                     })
