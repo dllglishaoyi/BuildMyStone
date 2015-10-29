@@ -50,6 +50,15 @@ function getdecksduowan (req,res) {
             // res.send(result);
             console.log(pageurl);
             if (result) {
+                var $ = cheerio.load(result.text);
+                ;
+                $("#list-page li").each(function(index,item){
+                    var deckUrl = "http://ls.duowan.com"+$(item).children("a").attr('href');
+                    getSingleDeckDuowan(deckUrl,function(err,deck) {
+                        // body...
+                        console.log(deck);
+                    });
+                });
                 
                 // if ($(".c_page-next")) {
                 //     scanpage($(".c_page-next").attr('href'));
@@ -68,6 +77,51 @@ function getdecksduowan (req,res) {
     scanpage (startUrl +".html");
     
 }
+
+function getSingleDeckDuowan(url,callback){
+    var deck = [];
+    request(url, function (error, response, body) {
+        if (!error) {
+            var $ = cheerio.load(body);
+            var realUrl = '';
+            $("#article a").each(function(index,item){
+                var text = $(item).text();
+                if (text == '点击此处查看卡组详情') {
+                    realUrl = $(item).attr('href');
+                };
+            });
+            console.log("realUrl:",realUrl);
+            if (realUrl) {
+                request(realUrl, function (error, response, body) {
+                    if (!error) {
+                        var $ = cheerio.load(body);
+                        console.log("cards:",$(".list-box").html());
+                        // $(".list-box li").each(function(index,item){
+                        //     var cardName = $(item).children("a").children("p");
+                        //     var cardCount = $(item).children("a").children("span");
+                        // });
+                    }else{
+                        callback(error,null);
+                    }
+                });
+                    
+            var $ = cheerio.load(body);
+            }else{
+                callback("no deck",null);
+            }
+            // for (var i = 0; i < cardsData.length; i++) {
+            //     deck.push({
+            //         cardName:cardsData[i].name
+            //     });
+            // };
+            callback(error,deck);
+        } else {
+            console.log("We’ve encountered an error: " + error);
+            callback(error,null);
+        }
+    });
+}
+
 
 function importcards163 (req,res) {
     var cards = require("./cards.json");
