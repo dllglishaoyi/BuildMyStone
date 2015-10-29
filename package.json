@@ -16,6 +16,7 @@
     "express": "~4.13.1",
     "jade": "~1.11.0",
     "morgan": "~1.6.1",
+    "phantom": "^0.8.0",
     "request": "^2.64.0",
     "serve-favicon": "~2.3.0",
     "superagent": "^1.4.0",

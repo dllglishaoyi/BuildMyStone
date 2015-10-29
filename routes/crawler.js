@@ -13,6 +13,11 @@ var HearthStone = require('../models/hearthstone');
 
 var targetUrl = 'http://www.hearthstonetopdecks.com/deck-category/class/';
 var deckClasses = ['hunter','mage','paladin','priest','rogue','shaman','warlock','warrior'];
+
+var phantom = require('phantom');
+var phantom_options = {
+        path: '/Users/developer/Downloads/phantomjs-2.0.0-macosx/bin/'
+};
 /* GET users listing. */ 
 router.get('/', function(req, res, next) {
   // res.send('respond with a resource');
@@ -52,22 +57,27 @@ function getdecksduowan (req,res) {
             if (result) {
                 var $ = cheerio.load(result.text);
                 ;
-                $("#list-page li").each(function(index,item){
+                async.eachSeries($("#list-page li"), function(item, callback) {
                     var deckUrl = "http://ls.duowan.com"+$(item).children("a").attr('href');
                     getSingleDeckDuowan(deckUrl,function(err,deck) {
                         // body...
                         console.log(deck);
+                        callback();
                     });
+                
+                }, function(err){
+                    if (page < pageCount) {
+                        page ++ 
+                        scanpage (startUrl+"_"+page+".html");
+                    };
                 });
-                
-                // if ($(".c_page-next")) {
-                //     scanpage($(".c_page-next").attr('href'));
-                // };
-                if (page < pageCount) {
-                    page ++ 
-                    scanpage (startUrl+"_"+page+".html");
-                };
-                
+                // $("#list-page li").each(function(index,item){
+                //     var deckUrl = "http://ls.duowan.com"+$(item).children("a").attr('href');
+                //     getSingleDeckDuowan(deckUrl,function(err,deck) {
+                //         // body...
+                //         console.log(deck);
+                //     });
+                // });
             }else{
 
             }
@@ -92,20 +102,18 @@ function getSingleDeckDuowan(url,callback){
             });
             console.log("realUrl:",realUrl);
             if (realUrl) {
-                request(realUrl, function (error, response, body) {
-                    if (!error) {
-                        var $ = cheerio.load(body);
-                        console.log("cards:",$(".list-box").html());
-                        // $(".list-box li").each(function(index,item){
-                        //     var cardName = $(item).children("a").children("p");
-                        //     var cardCount = $(item).children("a").children("span");
-                        // });
-                    }else{
-                        callback(error,null);
-                    }
-                });
-                    
-            var $ = cheerio.load(body);
+                phantom.create(function (ph) {
+                  ph.createPage(function (page) {
+                    page.open(realUrl, function (status) {
+                      console.log("opened page? ", status);
+                      page.evaluate(function () { return $(".list-box").html(); }, function (result) {
+                        console.log('list-box content is ' + result);
+                        ph.exit();
+                        callback("deck finish",null);
+                      });
+                    });
+                  });
+                },phantom_options);
             }else{
                 callback("no deck",null);
             }
@@ -114,7 +122,7 @@ function getSingleDeckDuowan(url,callback){
             //         cardName:cardsData[i].name
             //     });
             // };
-            callback(error,deck);
+            
         } else {
             console.log("We’ve encountered an error: " + error);
             callback(error,null);
