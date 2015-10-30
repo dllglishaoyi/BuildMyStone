@@ -57,6 +57,10 @@ function getrecommenddecks(req,res){
     var ids = [];//for debug
     console.log(req.body);
     var usercards = req.body["cards[]"] || req.body.cards;
+    console.log(typeof usercards);
+    if (typeof usercards == "string") {
+      usercards = [usercards];
+    };
     // res.json();
     HearthStone.Deck.find({channel:"duowan"},function(err,decks){
       async.eachSeries(decks,function(deck,callback){

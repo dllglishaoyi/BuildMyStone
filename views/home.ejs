@@ -40,7 +40,12 @@
         document.getElementById("goBtn").addEventListener("click",function(e){
             // ligrid.showData();
             // console.log(ligrid.getSelectedData());
+
             var cardsdata = ligrid.getSelectedData();
+            if (cardsdata.length <= 0) {
+                alert("请选择卡牌");
+                return;
+            };
             var postData = { cards: cardsdata };
             $.ajax({
               type: 'POST',
