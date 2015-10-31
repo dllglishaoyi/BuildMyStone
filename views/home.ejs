@@ -12,6 +12,19 @@
     <input type="test" id="username" placeholder="用户名" value="<%= userdata ? userdata.userName : ''%>">
     <button id="upload">上传卡组</button>
     <button id="goBtn">推荐卡组</button>
+    <br>推荐职业
+    <select id="klass">
+      <option value=0>全部</option>
+      <option value="2">德鲁伊</option>
+      <option value="3">猎人</option>
+      <option value="4">法师</option>
+      <option value="5">圣骑士</option>
+      <option value="6">牧师</option>
+      <option value="7">刺客</option>
+      <option value="8">萨满</option>
+      <option value="9">术士</option>
+      <option value="10">战士</option>
+    </select>
     <div  id="ligrid">
     </div>
     <a id="decks-area-btn" href="#decks-area"></a>
@@ -46,7 +59,7 @@
                 alert("请选择卡牌");
                 return;
             };
-            var postData = { cards: cardsdata };
+            var postData = { cards: cardsdata ,klass:$("#klass").val()};
             $.ajax({
               type: 'POST',
               url: '/getrecommenddecks',

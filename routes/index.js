@@ -62,7 +62,11 @@ function getrecommenddecks(req,res){
       usercards = [usercards];
     };
     // res.json();
-    HearthStone.Deck.find({channel:"duowan"},function(err,decks){
+    var condition = {channel:"duowan"};
+    if (req.body.klass != 0) {
+      condition.klass = req.body.klass;
+    };
+    HearthStone.Deck.find(condition,function(err,decks){
       async.eachSeries(decks,function(deck,callback){
         // deck.cards.sort();
         var cards = unionCards(usercards,deck,deck._id);

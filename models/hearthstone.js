@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 
 var DeckSchema = mongoose.Schema({
     channel:String,
+    klass:Number,
     deckSourceUrl:String,
     cards:[{
         cardName:String
