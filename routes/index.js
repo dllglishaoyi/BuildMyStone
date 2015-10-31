@@ -24,6 +24,38 @@ router.post('/uploadusercards',uploadusercards);
 
 router.get('/home/:username?',home);
 
+router.get('/decktoklass',decktoklass);
+
+function decktoklass (req,res) {
+    HearthStone.Deck.find({},function(err,decks){
+        async.eachLimit(decks,3, function(deck, callback) {
+            setupDeckKlass(deck);
+            callback();
+        },
+        function(err){
+            res.send("ok");   
+        });
+         
+    });
+}
+
+function  setupDeckKlass(deck) {
+    //2：德鲁伊，3：猎人，4:法师，5：圣骑士，6：牧师，7：刺客，8：萨满，10：战士
+    if (!deck || !deck.cards) {
+        return;
+    };
+    var cards = deck.cards.map(function(card){
+        return card.cardName;
+    });
+    HearthStone.Card163.findOne({name:{$in:cards},klass:{$exists:true}},function(err,card){
+        if (card) {
+            deck.klass = card.klass;
+            deck.save();
+        };
+    });
+    
+}
+
 module.exports = router;
 
 function home(req,res){
