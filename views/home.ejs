@@ -6,6 +6,19 @@
 <link rel='stylesheet' href='/plugins/ligrid/ligrid.css' />
 </head>
 <body>
+  卡牌职业
+    <select id="cardklass">
+      <option value=0>全部</option>
+      <option value="2">德鲁伊</option>
+      <option value="3">猎人</option>
+      <option value="4">法师</option>
+      <option value="5">圣骑士</option>
+      <option value="6">牧师</option>
+      <option value="7">刺客</option>
+      <option value="8">萨满</option>
+      <option value="9">术士</option>
+      <option value="10">战士</option>
+    </select>
     <input type="search" id="search">
     <button id="searchBtn">搜索</button>
     <br>
@@ -41,9 +54,9 @@
         ligrid.loadData(cards);
         document.getElementById("searchBtn").addEventListener("click",function(e){
             var keyword = document.getElementById('search').value;
-            if (keyword) {
+            if (true || keyword) {
                 var newcards = cards.filter(function(item) {
-                    return item.name.indexOf(keyword) > -1;
+                    return item.name.indexOf(keyword) > -1 && ($("#cardklass").val() == 0 || item.klass == $("#cardklass").val());
                 });
                 ligrid.loadData(newcards);
             }else{
