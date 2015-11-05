@@ -11,6 +11,10 @@ var users = require('./routes/users');
 var crawler = require('./routes/crawler');
 
 var app = express();
+var lessMiddleware = require('less-middleware');
+ 
+app.use(lessMiddleware(__dirname + '/public'));
+app.use(express.static(__dirname + '/public'));
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://hearthstone:hearthstonepass@localhost/hearthstone');
