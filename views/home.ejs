@@ -119,15 +119,19 @@
             for (var i = 0; i < decks.length; i++) {
                 addDeck(decks[i]);
             };
+            $(".expand-btn").click(function(e) {
+              $(this).parent().parent().find(".card-item").toggle();
+            });
         }
         function addDeck(deck){
             var deckList = document.createElement("ul");
             deckList.className = "deck";
             var deckHeader = document.createElement("li");
-            deckHeader.innerHTML = "相似度："+deck.percent+"<a href="+deck.deckSourceUrl+">卡组详解</a>";
+            deckHeader.innerHTML = "相似度："+deck.percent+"<a href="+deck.deckSourceUrl+">卡组详解</a><button class='expand-btn'>展开/收起</button>";
             deckList.appendChild(deckHeader);
             for (var i = 0; i < deck.originalDeck.length; i++) {
                 var cardItem = document.createElement("li");
+                cardItem.className = "card-item";
                 var flag = false;
                 var a = deck.sameCards.indexOf(deck.originalDeck[i].cardName);
                 if (a >=0) {
