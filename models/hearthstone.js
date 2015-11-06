@@ -42,6 +42,8 @@ var Card163Schema = mongoose.Schema({
     img :String,
     klass:Number,
     name:String,
+    name_en:String,
+    img_banner:String,
     powers:[String],
     race :Number,
     rarity:Number,
