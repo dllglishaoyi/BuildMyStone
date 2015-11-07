@@ -45,6 +45,7 @@ router.get('/importcards163',importcards163);
 router.get('/getdecksduowan',getdecksduowan);
 
 router.get('/decktoklass',decktoklass);
+router.get('/import_en_name',import_en_name);
 
 function decktoklass (req,res) {
     HearthStone.Deck.find({},function(err,decks){
@@ -179,6 +180,26 @@ function getSingleDeckDuowan(url,callback){
     });
 }
 
+function import_en_name (req,res) {
+    var cardsSet = require("./AllSets.json");
+    var keys = [];
+    for (var key in cardsSet) {
+        // keys.push(key);
+        async.each(cardsSet[key],function(card,callback){
+            // HearthStone.Card163.findOne({id:card.id},function(err,cc){
+            //     console.log(cc);
+            //     callback();
+            // });
+            HearthStone.Card163.findOneAndUpdate({id:card.id},{$set:{name_en:card.name}},function(err,afrerCard){
+                console.log(afrerCard);
+                callback();
+            });
+        },function(err){
+        });
+    };
+
+    res.send(keys);
+}
 
 function importcards163 (req,res) {
     var cards = require("./cards.json");
