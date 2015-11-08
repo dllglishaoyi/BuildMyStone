@@ -46,6 +46,9 @@
 
     </div>
     <script type="text/template" id="card-item">
+      <li class="card-item">
+        {{= cardName}}{{= flag ? '(您有)' : ''}}
+      </li>
     </script>
     <script src="/javascripts/zepto.min.js"></script>
     <script type="text/javascript" src="/javascripts/underscore-min.js"></script>
@@ -138,18 +141,27 @@
             var deckHeader = document.createElement("li");
             deckHeader.innerHTML = "相似度："+deck.percent+"<a href="+deck.deckSourceUrl+">卡组详解</a><button class='expand-btn'>展开/收起</button>";
             deckList.appendChild(deckHeader);
+            var html = '';
             for (var i = 0; i < deck.originalDeck.length; i++) {
-                var cardItem = document.createElement("li");
-                cardItem.className = "card-item";
+                // var cardItem = document.createElement("li");
+                // cardItem.className = "card-item";
                 var flag = false;
                 var a = deck.sameCards.indexOf(deck.originalDeck[i].cardName);
                 if (a >=0) {
                     deck.sameCards.splice(a, 1); 
                     flag = true;
                 };
-                cardItem.innerHTML = deck.originalDeck[i].cardName + (flag ? "(您有)" : '');
-                deckList.appendChild(cardItem);
+                // cardItem.innerHTML = deck.originalDeck[i].cardName + (flag ? "(您有)" : '');
+                // deckList.appendChild(cardItem);
+
+                var cardItem = {
+                  cardName:deck.originalDeck[i].cardName,
+                  flag:flag
+                }
+                html += compiled(cardItem);
             };
+            // console.log(html);
+            $(deckList).append(html);
             var decksArea = document.getElementById("decks-area");
             decksArea.appendChild(deckList);
             $("#decks-area-btn").click();
