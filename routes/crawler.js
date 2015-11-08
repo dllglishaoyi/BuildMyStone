@@ -3,11 +3,15 @@ var router = express.Router();
 
 var request = require("request");
 var url = require('url'); //解析操作url
+var fs = require('fs');
 var superagent = require('superagent'); //这三个外部依赖不要忘记npm install
 var cheerio = require('cheerio');
 var eventproxy = require('eventproxy');
 
 var async = require('async');
+
+var uploadFolder = 'public/images/upload/';
+var utils = require('../lib/utils');
 
 var HearthStone = require('../models/hearthstone');
 
@@ -46,6 +50,74 @@ router.get('/getdecksduowan',getdecksduowan);
 
 router.get('/decktoklass',decktoklass);
 router.get('/import_en_name',import_en_name);
+
+router.get('/downloadimages',downloadimages);
+
+function downloadimages (req,res) {
+    var hostUrl = "http://www.hearthstonetopdecks.com/wp-content/uploads/";
+    var monthUrls = ["2014/03/",
+                    "2014/04/",
+                    "2014/05/",
+                    "2014/06/",
+                    "2014/07/",
+                    "2014/08/",
+                    "2014/09/",
+                    "2014/10/",
+                    "2014/11/",
+                    "2014/12/",
+                    "2015/01/",
+                    "2015/02/",
+                    "2015/03/",
+                    "2015/04/",
+                    "2015/05/",
+                    "2015/06/",
+                    "2015/07/",
+                    "2015/08/",
+                    "2015/09/",
+                    "2015/10/",
+                    "2015/11/",
+                    "2015/12/",
+                    ];
+    async.eachSeries(monthUrls,function(monthUrl,cb){
+        var url = hostUrl + monthUrl;
+        console.log("start getting page:",url);
+        superagent.get(url)
+        .end(function (err, result) {
+            // res.send(result);
+            var $ = cheerio.load(result.text);
+            // console.log($("a"));
+            async.eachSeries($("a"), function(item, callback) {
+                var href = "http://www.hearthstonetopdecks.com" + $(item).attr("href");
+                if (href.indexOf(".png") > -1) {
+                    console.log(href);
+                    utils.mkdirs(uploadFolder);
+                    var imgName = href.split('/').slice(-1).pop();
+                    var normalpath = uploadFolder+imgName;
+                    fs.exists(normalpath, function (exists) {
+                        if (!exists) {
+                            console.log("download "+href + " to "+normalpath);
+                            utils.download(href, normalpath, function(err){
+                                console.log(err);
+                                if (!err) {
+                                };
+                                callback();
+                            });
+                        }else{
+                            callback();
+                        }
+                    });
+                }else{
+                    callback();
+                }
+            }, function(err){
+                
+            });
+            cb();
+        });
+    },function(err){
+        res.send("ok");
+    });
+}
 
 function decktoklass (req,res) {
     HearthStone.Deck.find({},function(err,decks){
