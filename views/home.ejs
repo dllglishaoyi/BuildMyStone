@@ -45,11 +45,20 @@
     <div name="decks-area" id="decks-area">
 
     </div>
+    <script type="text/template" id="card-item">
+    </script>
     <script src="/javascripts/zepto.min.js"></script>
+    <script type="text/javascript" src="/javascripts/underscore-min.js"></script>
     <script src="/plugins/ligrid/ligrid.js"></script>
     <script type="text/javascript">
         var cards = <%- JSON.stringify(cards)%>;
         var userdata = <%- JSON.stringify(userdata ? userdata.cards : [])%>;
+
+         _.templateSettings = {
+            interpolate: /\{\{\=(.+?)\}\}/gim,
+            evaluate: /\{\{(.+?)\}\}/gim,
+        };
+        var compiled = _.template($('#card-item').html());
 
         var ligrid = new Ligrid({countPerpage:20,gridid:"ligrid",userData:userdata});
         ligrid.loadData(cards);
@@ -144,7 +153,6 @@
             var decksArea = document.getElementById("decks-area");
             decksArea.appendChild(deckList);
             $("#decks-area-btn").click();
-
         }
         // if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
             // $(".ligrid-li").click(function() {
