@@ -46,8 +46,13 @@
 
     </div>
     <script type="text/template" id="card-item">
-      <li class="card-item">
-        {{= cardName}}{{= flag ? '(您有)' : ''}}
+      <li>
+        <a class="card-frame rare-card">
+        <span class="card-cost">3</span>
+        <span class="card-name">{{= cardName}}</span>
+        <span class="card-count">1</span>
+        <span class="card-image card-count-ex"><img src="{{= smImg}}"></span>
+        </a>
       </li>
     </script>
     <script src="/javascripts/zepto.min.js"></script>
@@ -56,7 +61,7 @@
     <script type="text/javascript">
         var cards = <%- JSON.stringify(cards)%>;
         var userdata = <%- JSON.stringify(userdata ? userdata.cards : [])%>;
-
+        var cardsMap = _.indexBy(cards, 'name');
          _.templateSettings = {
             interpolate: /\{\{\=(.+?)\}\}/gim,
             evaluate: /\{\{(.+?)\}\}/gim,
@@ -154,9 +159,11 @@
                 // cardItem.innerHTML = deck.originalDeck[i].cardName + (flag ? "(您有)" : '');
                 // deckList.appendChild(cardItem);
 
+                var smImg = '/images/upload/sm-card-' + cardsMap[deck.originalDeck[i].cardName].name_en.toLowerCase().replace(" ","-")+".png"
                 var cardItem = {
                   cardName:deck.originalDeck[i].cardName,
-                  flag:flag
+                  flag:flag,
+                  smImg:smImg
                 }
                 html += compiled(cardItem);
             };

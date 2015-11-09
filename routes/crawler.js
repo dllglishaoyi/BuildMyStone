@@ -88,7 +88,7 @@ function downloadimages (req,res) {
             // console.log($("a"));
             async.eachSeries($("a"), function(item, callback) {
                 var href = "http://www.hearthstonetopdecks.com" + $(item).attr("href");
-                if (href.indexOf(".png") > -1) {
+                if (href.indexOf(".png") > -1 && href.indexOf("sm-card") > -1) {
                     console.log(href);
                     utils.mkdirs(uploadFolder);
                     var imgName = href.split('/').slice(-1).pop();
