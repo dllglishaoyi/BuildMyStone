@@ -49,7 +49,7 @@
       <li>
         <a class="card-frame rare-card">
         <span class="card-cost">3</span>
-        <span class="card-name">{{= cardName}}</span>
+        <span class="card-name">{{= cardName}}{{= name_en}}</span>
         <span class="card-count">1</span>
         <span class="card-image card-count-ex"><img src="{{= smImg}}"></span>
         </a>
@@ -159,11 +159,12 @@
                 // cardItem.innerHTML = deck.originalDeck[i].cardName + (flag ? "(您有)" : '');
                 // deckList.appendChild(cardItem);
 
-                var smImg = '/images/upload/sm-card-' + cardsMap[deck.originalDeck[i].cardName].name_en.toLowerCase().replace(" ","-")+".png"
+                var smImg = '/images/upload/sm-card-' + cardsMap[deck.originalDeck[i].cardName].name_en.toLowerCase().replace(/\s/g,"-").replace(/[.']/g,"")+".png"
                 var cardItem = {
                   cardName:deck.originalDeck[i].cardName,
                   flag:flag,
-                  smImg:smImg
+                  smImg:smImg,
+                  name_en:cardsMap[deck.originalDeck[i].cardName].name_en
                 }
                 html += compiled(cardItem);
             };
