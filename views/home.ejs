@@ -46,12 +46,14 @@
 
     </div>
     <script type="text/template" id="card-item">
-      <li>
-        <a class="card-frame rare-card">
-        <span class="card-cost">3</span>
-        <span class="card-name">{{= cardName}}{{= name_en}}</span>
+      <li class="card-item">
+        <a class="card-frame rare-card rarity-{{= rarity}}">
+        <span class="card-cost">{{= cost}}</span>
+        <span class="card-name">{{= cardName}}{{= flag ? "(您有)" : ''}}</span>
         <span class="card-count">1</span>
-        <span class="card-image card-count-ex"><img src="{{= smImg}}"></span>
+        <span class="card-image card-count-ex">
+          <img src="{{= smImg}}">
+        </span>
         </a>
       </li>
     </script>
@@ -159,12 +161,15 @@
                 // cardItem.innerHTML = deck.originalDeck[i].cardName + (flag ? "(您有)" : '');
                 // deckList.appendChild(cardItem);
 
-                var smImg = '/images/upload/sm-card-' + cardsMap[deck.originalDeck[i].cardName].name_en.toLowerCase().replace(/\s/g,"-").replace(/[.']/g,"")+".png"
+                var smImg = '/images/upload/sm-card-' + (cardsMap[deck.originalDeck[i].cardName] ? cardsMap[deck.originalDeck[i].cardName].name_en.toLowerCase().replace(/\s/g,"-").replace(/[.']/g,"")+".png" : "");
+                var card = cardsMap[deck.originalDeck[i].cardName];
                 var cardItem = {
                   cardName:deck.originalDeck[i].cardName,
                   flag:flag,
                   smImg:smImg,
-                  name_en:cardsMap[deck.originalDeck[i].cardName].name_en
+                  rarity:(card ? card.rarity : "1"),
+                  cost:(card ? card.cost : "X"),
+                  name_en:(cardsMap[deck.originalDeck[i].cardName] ? cardsMap[deck.originalDeck[i].cardName].name_en : 'XXX')
                 }
                 html += compiled(cardItem);
             };
