@@ -153,6 +153,7 @@
                 // var cardItem = document.createElement("li");
                 // cardItem.className = "card-item";
                 var flag = false;
+                deck.originalDeck[i].cardName = deck.originalDeck[i].cardName.trim();
                 var a = deck.sameCards.indexOf(deck.originalDeck[i].cardName);
                 if (a >=0) {
                     deck.sameCards.splice(a, 1); 
@@ -163,13 +164,16 @@
 
                 var smImg = '/images/upload/sm-card-' + (cardsMap[deck.originalDeck[i].cardName] ? cardsMap[deck.originalDeck[i].cardName].name_en.toLowerCase().replace(/\s/g,"-").replace(/[.']/g,"")+".png" : "");
                 var card = cardsMap[deck.originalDeck[i].cardName];
+                if (!card) {
+                  console.log(deck.originalDeck[i].cardName);
+                };
                 var cardItem = {
                   cardName:deck.originalDeck[i].cardName,
                   flag:flag,
                   smImg:smImg,
                   rarity:(card ? card.rarity : "1"),
                   cost:(card ? card.cost : "X"),
-                  name_en:(cardsMap[deck.originalDeck[i].cardName] ? cardsMap[deck.originalDeck[i].cardName].name_en : 'XXX')
+                  name_en:(card ? card.name_en : 'XXX')
                 }
                 html += compiled(cardItem);
             };
