@@ -47,7 +47,7 @@
     </div>
     <script type="text/template" id="card-item">
       <li class="card-item">
-        <a class="card-frame rare-card rarity-{{= rarity}}">
+        <a class="card-frame rare-card rarity-{{= rarity}}" href="{{= href}}">
         <span class="card-cost">{{= cost}}</span>
         <span class="card-name">{{= cardName}}{{= flag ? "(您有)" : ''}}</span>
         <span class="card-count">1</span>
@@ -173,7 +173,8 @@
                   smImg:smImg,
                   rarity:(card ? card.rarity : "1"),
                   cost:(card ? card.cost : "X"),
-                  name_en:(card ? card.name_en : 'XXX')
+                  name_en:(card ? card.name_en : 'XXX'),
+                  href:"http://db.duowan.com/lushi/card/detail/"+card.name_en.replace(" ","_")+".html"
                 }
                 html += compiled(cardItem);
             };
