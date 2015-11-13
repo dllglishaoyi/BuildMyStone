@@ -10,7 +10,7 @@
 
 ![pic1](http://stone.laolizi.com/tutorial/2.png)
 
-####为了可以在关闭网页后还能保存之前标记的卡牌，可以输入用户名然后点击上传卡组，下次就可以通过http://114.215.198.121:3000/home/xxx(您的用户名)访问之前上传的记录
+####为了可以在关闭网页后还能保存之前标记的卡牌，可以输入用户名然后点击上传卡组，下次就可以通过http://stone.laolizi.com/home/xxx(您的用户名)访问之前上传的记录
 
 ![pic1](http://stone.laolizi.com/tutorial/3.png)
 
