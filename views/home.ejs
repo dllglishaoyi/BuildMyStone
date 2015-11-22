@@ -175,7 +175,7 @@
                   rarity:(card ? card.rarity : "1"),
                   cost:(card ? card.cost : "X"),
                   name_en:(card ? card.name_en : 'XXX'),
-                  href:"http://db.duowan.com/lushi/card/detail/"+card.name_en.replace(" ","_")+".html"
+                  href:(card && card.name_en) ? ("http://db.duowan.com/lushi/card/detail/"+card.name_en.replace(" ","_")+".html") : ''
                 }
                 html += compiled(cardItem);
             };
