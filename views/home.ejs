@@ -48,7 +48,7 @@
     </div>
     <script type="text/template" id="card-item">
       <li class="card-item">
-        <a class="card-frame rare-card rarity-{{= rarity}}" href="{{= href}}">
+        <a class="card-frame rare-card rarity-{{= rarity}}" href="{{= href}}" target="_blank">
         <span class="card-cost">{{= cost}}</span>
         <span class="card-name">{{= cardName}}{{= flag ? "(您有)" : ''}}</span>
         <span class="card-count">1</span>
@@ -147,7 +147,7 @@
             var deckList = document.createElement("ul");
             deckList.className = "deck";
             var deckHeader = document.createElement("li");
-            deckHeader.innerHTML = "相似度："+deck.percent+"<a href="+deck.deckSourceUrl+">卡组详解</a><button class='expand-btn'>展开/收起</button>";
+            deckHeader.innerHTML = "相似度："+deck.percent+"<a target='_blank' href="+deck.deckSourceUrl+">卡组详解</a><button class='expand-btn'>展开/收起</button>";
             deckList.appendChild(deckHeader);
             var html = '';
             for (var i = 0; i < deck.originalDeck.length; i++) {
